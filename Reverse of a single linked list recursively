@@ -1,0 +1,98 @@
+//Write a C program to reverse a single linked list recursively.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+struct Node* first=NULL;
+// Write a function to create a new node with the given data
+void create(int val,int pos){
+struct Node* node=(struct Node*)malloc(sizeof(struct Node));
+if(pos==0){
+node->data=val;
+node->next=NULL;
+first=node;
+}else{
+struct Node* temp=first;
+for(int i=1;i<=pos;i++){
+if(i==pos){
+node->data=val;
+temp->next=node;
+node->next=NULL;
+}else{
+temp=temp->next;
+}
+}
+}
+}
+// Write a function to print the linked list
+void original(void){
+struct Node* temp=first;
+while(temp!=NULL){
+printf("%d -> ",temp->data);
+temp=temp->next;
+}
+printf("Null\n");
+}
+// Write a function to reverse the linked list recursively
+void reverse(void){
+struct Node* temp=first;
+struct Node* back=NULL;
+struct Node* front=NULL;
+while(temp!=NULL){
+front=temp->next;
+temp->next=back;
+back=temp;
+temp=front;
+}
+first=back;
+original();
+}
+// Write your main function here 
+void main(){
+int n,val;
+printf("No of nodes: ");
+scanf("%d",&n);
+for(int i=0;i<n;i++){
+printf("Data for node %d: ",i+1);
+scanf("%d",&val);
+create(val,i);
+}
+printf("Original linked list: ");
+original();
+printf("Reversed linked list: ");
+reverse();
+}
+
+
+
+/*
+
+Sample Test Cases
+Test case 1
+No·of·nodes:·5	
+Data·for·node·1:·5	
+Data·for·node·2:·4	
+Data·for·node·3:·3	
+Data·for·node·4:·2	
+Data·for·node·5:·1	
+Original·linked·list:·5·->·4·->·3·->·2·->·1·->·Null⏎	
+Reversed·linked·list:·1·->·2·->·3·->·4·->·5·->·Null⏎	
+Test case 2
+No·of·nodes:·7	
+Data·for·node·1:·1	
+Data·for·node·2:·2	
+Data·for·node·3:·3	
+Data·for·node·4:·4	
+Data·for·node·5:·3	
+Data·for·node·6:·2	
+Data·for·node·7:·1	
+Original·linked·list:·1·->·2·->·3·->·4·->·3·->·2·->·1·->·Null⏎	
+Reversed·linked·list:·1·->·2·->·3·->·4·->·3·->·2·->·1·->·Null⏎
+
+
+*/
