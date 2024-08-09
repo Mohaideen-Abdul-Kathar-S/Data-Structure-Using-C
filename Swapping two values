@@ -1,0 +1,95 @@
+//write a C program that could swap nodes in a linked list N for two given keys X and Y.
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node{
+int data;
+struct Node* next;
+};
+//write your code..
+void push(struct Node** start,int n){
+struct Node* node=(struct Node*)malloc(sizeof(struct Node));
+node->data=n;
+if((*start)==NULL){
+node->next=NULL;
+(*start)=node;
+}else{
+node->next=(*start);
+(*start)=node;
+}
+}
+void printList(struct Node* start){
+struct Node* temp=start;
+while(temp!=NULL){
+printf("%d --> ",temp->data);
+temp=temp->next;
+}
+printf("Null\n");
+}
+int swapNodes(struct Node** start,int x,int y){
+if(x==y) return 1;
+struct Node* temp1=(*start);
+struct Node* temp2=(*start);
+while(temp1!=NULL&&temp2!=NULL){
+if(temp1->data!=x){
+temp1=temp1->next;
+}
+if(temp2->data!=y){
+temp2=temp2->next;
+}
+if(temp2->data==y&&temp1->data==x){
+int temp=temp1->data;
+temp1->data=temp2->data;
+temp2->data=temp;
+return 1;
+}
+
+
+}
+return 1;
+}
+
+
+int main()
+{   struct Node* start = NULL;
+    int n,i,b[30],j,a,x,y;
+    scanf("%d",&n);
+    for(i=0,j=n-1;i<n;i++,j--)
+    {   scanf("%d",&a);
+        b[j]=a;
+        push(&start, a);
+    }
+    printf("Linked list before swapping: ");
+    printList(start);
+    scanf("%d",&x);
+    scanf("%d",&y);
+    swapNodes(&start,x,y);
+    printf("Linked list after swapping: ");
+    printList(start);
+    return 0;
+}
+
+/*
+
+
+Sample Test Cases
+Test case 1
+6	
+14 20 13 12 15 10	
+Linked·list·before·swapping:·10·-->·15·-->·12·-->·13·-->·20·-->·14·-->·Null⏎	
+12	
+20	
+Linked·list·after·swapping:·10·-->·15·-->·20·-->·13·-->·12·-->·14·-->·Null⏎	
+Test case 2
+5	
+5 4 3 2 1	
+Linked·list·before·swapping:·1·-->·2·-->·3·-->·4·-->·5·-->·Null⏎	
+3	
+6	
+Linked·list·after·swapping:·1·-->·2·-->·3·-->·4·-->·5·-->·Null⏎
+
+*/
