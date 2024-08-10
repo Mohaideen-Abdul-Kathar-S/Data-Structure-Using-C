@@ -1,0 +1,113 @@
+//Your task is to complete the given functions to manage linked lists, sort and merge the sets (Set A and Set B)
+
+
+
+    struct Node* left = sortLinkedList(head);
+    struct Node* right = sortLinkedList(half);
+
+    struct Node dummy;
+    struct Node* tail = &dummy;
+    dummy.next = NULL;
+    while (left != NULL && right != NULL) {
+        if (left->data <= right->data) {
+            tail->next = left;
+            left = left->next;
+        } else {
+            tail->next = right;
+            right = right->next;
+        }
+        tail = tail->next;
+    }
+    tail->next = (left != NULL) ? left : right;
+    return dummy.next;
+}
+
+// Function to convert a linked list to a string
+char* linkedListToString(struct Node* head) {
+    static char result[10000];
+    result[0] = '\0';
+    char buffer[50];
+    while (head != NULL) {
+        sprintf(buffer, "%d", head->data);
+        strcat(result, buffer);
+        if (head->next != NULL) {
+            strcat(result, " -> ");
+        }
+        head = head->next;
+    }
+    return result;
+}
+
+// Function to convert an array to a sorted linked list
+struct Node* arrayToSortedList(int arr[], int len) {
+    struct Node* head = NULL;
+    for (int i = 0; i < len; i++) {
+        insertAtEnd(&head, arr[i]);
+    }
+    return sortLinkedList(head);
+}
+
+// Function to read a space-separated string into an array of integers
+int readStringArray(char *argsArray, int arr[]) {
+    int col = 0;
+    char *token = strtok(argsArray, " ");
+    while (token != NULL) {
+        arr[col] = atoi(token);
+        token = strtok(NULL, " ");
+        col++;
+    }
+    return col;
+}
+
+// Function to concatenate two linked lists
+void concatenateLists(struct Node* head1, struct Node* head2, struct Node** result) {
+    struct Node* temp = head1;
+    while (temp != NULL) {
+        insertAtEnd(result, temp->data);
+        temp = temp->next;
+    }
+    temp = head2;
+    while (temp != NULL) {
+        insertAtEnd(result, temp->data);
+        temp = temp->next;
+    }
+}
+
+// Function to merge two arrays into a concatenated linked list
+char* mergeTwoSLL(int arr1[], int arr1Len, int arr2[], int arr2Len) {
+    struct Node* list1 = arrayToSortedList(arr1, arr1Len);
+    struct Node* list2 = arrayToSortedList(arr2, arr2Len);
+    struct Node* resultList = NULL;
+    concatenateLists(list1, list2, &resultList);
+    return linkedListToString(resultList);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Usage: %s <array1> <array2>\n", argv[0]);
+        return 1;
+    }
+    int arr1[10000];
+    int arr2[10000];
+    int arr1Len = readStringArray(argv[1], arr1);
+    int arr2Len = readStringArray(argv[2], arr2);
+    printf("%s\n", mergeTwoSLL(arr1, arr1Len, arr2, arr2Len));
+    return 0;
+}
+
+/*
+
+
+Sample Test Cases
+Test case 1
+Command line arguments: 
+5 3 0 21 -21 12 54 -33 -78
+-5 1 -40 20 6 8 7
+-78·->·-33·->·-21·->·0·->·3·->·5·->·12·->·21·->·54·->·-40·->·-5·->·1·->·6·->·7·->·8·->·20⏎	
+Test case 2
+Command line arguments: 
+1 2 3 4 5
+-5 -4 -3 -2 -1
+1·->·2·->·3·->·4·->·5·->·-5·->·-4·->·-3·->·-2·->·-1⏎
+
+*/
