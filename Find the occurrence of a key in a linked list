@@ -1,0 +1,79 @@
+//Find the occurrence of a key in a linked list
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct link{
+int data;
+struct link *next;
+};
+
+typedef struct link* Node;
+
+Node head=NULL;
+
+void add(int num){
+	Node node=(Node)malloc(sizeof(Node));
+	node->data=num;
+	if(head==NULL){
+		node->next=NULL;
+		head=node;
+	}else{
+		node->next=head;
+		head=node;
+	}
+}
+
+void display(){
+	printf("Given linked list: ");
+	Node temp=head;
+	while(temp!='\0'){
+		printf("%d-->",temp->data);
+		temp=temp->next;
+	}
+	printf("Null\n");
+}
+
+void count(int n){
+	Node temp=head;
+	int rep=0;
+	while(temp!='\0'){
+		if(n==temp->data){
+			rep++;
+		}
+		temp=temp->next;
+	}
+	printf("%d\n",rep);
+}
+
+int main(){
+	int n,val;
+	scanf("%d",&n);
+	for(int i=0;i<n;i++){
+		scanf("%d",&val);
+		add(val);
+	}
+	display();
+	scanf("%d",&n);
+	count(n);
+}
+
+
+
+/*
+
+Sample Test Cases
+Test case 1
+7	
+1 2 1 2 1 3 1	
+Given·linked·list:·1-->3-->1-->2-->1-->2-->1-->Null⏎	
+1	
+4	
+Test case 2
+10	
+1 2 3 4 5 4 3 2 1 5	
+Given·linked·list:·5-->1-->2-->3-->4-->5-->4-->3-->2-->1-->Null⏎	
+10	
+0
+
+*/
