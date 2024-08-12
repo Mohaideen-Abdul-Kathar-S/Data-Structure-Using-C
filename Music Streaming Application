@@ -1,0 +1,128 @@
+//Imagine you're building a music playlist feature for a music streaming app using a double-ended queue implemented through a linked list. The code you have is the foundation for playlist operations. Consider the following tasks:
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct queue {
+    char data[50]; 
+    struct queue *next;
+};
+typedef struct queue *DeQueue;
+DeQueue front = NULL, rear = NULL;
+void inject(char song[]) {
+DeQueue temp = (DeQueue)malloc(sizeof(struct queue));
+    if (temp == NULL) {
+        printf("Playlist is full. Unable to add the song\n");
+    } else {
+        strcpy(temp->data, song);
+        temp->next = NULL;
+        if (front == NULL) {
+            front = temp;
+        } else {
+            rear->next = temp;
+        }
+        rear = temp;
+	}
+
+    
+}
+void eject() {
+DeQueue temp = NULL;
+    if (rear == NULL) {
+        printf("Playlist is empty. Unable to remove a song\n");
+    } else {
+        temp = front;
+        if (front == rear) {
+            front = rear = NULL;
+        } else {
+            while (temp->next != rear) {
+                temp = temp->next;
+            }
+            rear = temp;
+            temp = rear->next;
+            rear->next = NULL;
+        }
+        printf("Removed song '%s'\n", temp->data);
+        free(temp);
+	}
+	
+}
+void display() {
+
+    
+    if (front == NULL) {
+        printf("Playlist is empty\n");
+    } else {
+        DeQueue temp = front;
+        printf("Current Playlist:\n");
+        while (temp != NULL) {
+            printf("%s\n", temp->data);
+            temp = temp->next;
+        }
+	}
+}
+int main() {
+    int op;
+    char song[50];
+    while (1) {
+        printf("1.Inject 2.Eject 3.Display 4.Exit\n");
+        printf("Enter your option: ");
+        scanf("%d", &op);
+        switch (op) {
+        case 1:
+            printf("Enter song name: ");
+            scanf("%s", song);
+            inject(song);
+            break;
+        case 2:
+            eject();
+            break;
+        case 3:
+            display();
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+
+/*
+
+
+Sample Test Cases
+Test case 1
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·1	
+Enter·song·name:·pop.mp3	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·1	
+Enter·song·name:·rock.mp3	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·1	
+Enter·song·name:·classical.mp3	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·2	
+Removed·song·'classical.mp3'⏎	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·3	
+Current·Playlist:⏎	
+pop.mp3⏎	
+rock.mp3⏎	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·2	
+Removed·song·'rock.mp3'⏎	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·2	
+Removed·song·'pop.mp3'⏎	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·3	
+Playlist·is·empty⏎	
+1.Inject·2.Eject·3.Display·4.Exit⏎	
+Enter·your·option:·4
+
+*/
