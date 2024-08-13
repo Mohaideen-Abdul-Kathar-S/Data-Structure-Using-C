@@ -1,0 +1,121 @@
+
+
+
+//Write the code in the functions isEmpty(), push(int x), pop() and evaluatePostfix(char *e) in the below program according to hints given as comment lines.
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#define STACK_MAX_SIZE 20
+
+typedef struct Stack {
+    int val;
+    struct Stack *next;
+} Stack;
+
+Stack *top = NULL;
+
+// Function prototypes
+int isEmpty();
+void push(int x);
+int pop();
+void evaluatePostfix(char *e);
+
+int main() {
+    char exp[20];
+    printf("Enter the postfix expression : ");
+    scanf("%s", exp);
+    evaluatePostfix(exp);
+    return 0;
+}
+
+int isEmpty() {
+    return top == NULL;
+}
+
+void push(int x) {
+    Stack *newNode = (Stack *)malloc(sizeof(Stack));
+    if (!newNode) {
+        printf("Stack overflow\n");
+        exit(1);
+    }
+    newNode->val = x;
+    newNode->next = top;
+    top = newNode;
+}
+
+int pop() {
+    if (isEmpty()) {
+        printf("Stack underflow\n");
+        exit(1);
+    }
+    int val = top->val;
+    Stack *temp = top;
+    top = top->next;
+    free(temp);
+    return val;
+}
+
+void evaluatePostfix(char *e) {
+    int i;
+    for (i = 0; e[i] != '\0'; i++) {
+        if (isdigit(e[i])) {
+            push(e[i] - '0'); // Convert char to int and push to stack
+        } else if (e[i] == '+' || e[i] == '-' || e[i] == '*' || e[i] == '/') {
+            if (isEmpty()) {
+                printf("Invalid postfix expression.\n");
+                return;
+            }
+            int val1 = pop();
+
+            if (isEmpty()) {
+                printf("Invalid postfix expression.\n");
+                return;
+            }
+            int val2 = pop();
+
+            switch (e[i]) {
+                case '+': push(val2 + val1); break;
+                case '-': push(val2 - val1); break;
+                case '*': push(val2 * val1); break;
+                case '/': 
+                    if (val1 == 0) {
+                        printf("Division by zero error.\n");
+                        return;
+                    }
+                    push(val2 / val1); 
+                    break;
+            }
+        } else {
+            printf("Invalid postfix expression.\n");
+            return;
+        }
+    }
+
+    if (!isEmpty()) {
+        int result = pop();
+        if (isEmpty()) {
+            printf("Result : %d\n", result);
+        } else {
+            printf("Invalid postfix expression.\n");
+        }
+    } else {
+        printf("Invalid postfix expression.\n");
+    }
+}
+
+
+
+/*
+
+Sample Test Cases
+Test case 1
+Enter·the·postfix·expression·:·234+-	
+Result·:·-5⏎	
+Test case 2
+Enter·the·postfix·expression·:·-456+5+	
+Invalid·postfix·expression.⏎
+
+*/
