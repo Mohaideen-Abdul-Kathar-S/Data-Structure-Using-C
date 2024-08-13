@@ -1,0 +1,157 @@
+//Write a program that contains the functions convertInfix(char *e), priority(char x), push(char x), pop() and isEmpty so that it uses stack operations to converts an expression in Infix to Postfix.
+
+#include<stdlib.h>
+#include<string.h>
+#include<stdio.h>
+#include<ctype.h>
+#define STACK_MAX_SIZE 20
+
+
+// write your code here
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+
+char stack[50];
+int top;
+
+int isEmpty() {
+
+ return top == -1;
+}
+
+
+void push(char x) {
+ if (top < STACK_MAX_SIZE - 1) {
+        stack[++top] = x;
+    } else {
+        printf("Stack overflow\n");
+    }
+
+}
+
+
+char pop() {
+  if (top != -1) {
+        return stack[top--];
+    } else {
+        return -1; // Indicates stack underflow
+  }
+
+}
+
+int priority(char x) {
+
+ switch (x) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        case '^':
+            return 3;
+        default:
+            return 0;
+ }
+
+
+}
+
+void convertInfix(char * e) {
+
+char postfix[20];
+    int i = 0; // Index for the postfix expression
+    int parenthesesBalance = 0;
+    char invalidSymbol = 0;
+
+    while (*e != '\0') {
+        if (isalnum(*e)) {
+            postfix[i++] = *e;
+        } else if (*e == '(') {
+            push(*e);
+            parenthesesBalance++;
+        } else if (*e == ')') {
+            parenthesesBalance--;
+            while (!isEmpty() && stack[top] != '(') {
+                postfix[i++] = pop();
+            }
+            if (!isEmpty() && stack[top] == '(') {
+                pop(); // Remove '(' from stack
+            } else {
+                printf("Invalid infix expression : unbalanced parenthesis\n");
+                return;
+            }
+        } else if(strchr("&",*e)){
+invalidSymbol = 1;
+printf("Invalid symbols in infix expression\n");
+return;
+
+		}else if (strchr("+-*/^", *e)) {
+            while (!isEmpty() && priority(stack[top]) >= priority(*e)) {
+                postfix[i++] = pop();
+            }
+            push(*e);
+        } else {
+            invalidSymbol = 1;
+printf("Invalid symbols in infix expression\n");
+return;
+        }
+        e++;
+    }
+
+    while (!isEmpty()) {
+        if (stack[top] == '(') {
+
+
+printf("Invalid infix expression : unbalanced parenthesis\n");
+
+            return;
+        }
+        postfix[i++] = pop();
+    }
+
+    postfix[i] = '\0';
+
+    if (parenthesesBalance != 0) {
+        printf("Invalid infix expression : unbalanced parenthesis\n");
+    } else if (invalidSymbol) {
+        printf("Invalid symbols in infix expression\n");
+    } else {
+        printf("Postfix expression : %s\n", postfix);
+    }
+
+
+}
+
+
+
+int main() {
+	char exp[20];
+	char *e, x;
+	printf("Enter the expression : ");
+	scanf("%s",exp);
+	e = exp;
+	convertInfix(e);
+}
+
+
+/*
+
+
+Sample Test Cases
+Test case 1
+Enter·the·expression·:·A+B*(C-D)	
+Postfix·expression·:·ABCD-*+⏎	
+Test case 2
+Enter·the·expression·:·A+B*(C+D)*E+(F*G	
+Invalid·infix·expression·:·unbalanced·parenthesis⏎	
+Test case 3
+Enter·the·expression·:·A+B*(S+W&L)	
+Invalid·symbols·in·infix·expression⏎	
+Test case 4
+Enter·the·expression·:·A+B&(C-D	
+Invalid·symbols·in·infix·expression⏎
+
+*/
