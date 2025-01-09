@@ -1,0 +1,106 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int score;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int score) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->score = score;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+    struct Node* temp = head;
+    do {
+        printf("%d ", temp->score);
+        temp = temp->next;
+    } while (temp != head);
+    printf("\n");
+}
+
+// Function to insert a node at the end of the circular linked list
+struct Node* insertEnd(struct Node* head, int score) {
+    struct Node* node = createNode(score);
+    if (head == NULL) {
+        node->next = node; // Point to itself to make it circular
+        return node;
+    }
+    struct Node* temp = head;
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+    temp->next = node;
+    node->next = head; // Make the list circular
+    return head;
+}
+
+// Function to delete a node with a specific score from the circular linked list
+struct Node* deleteNode(struct Node* head, int targetScore) {
+    if (head == NULL) {
+        printf("List is empty\n");
+        return head;
+    }
+
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+
+    // Check if the head node itself needs to be deleted
+    if (head->score == targetScore) {
+        if (head->next == head) { // Only one node in the list
+            free(head);
+            return NULL;
+        }
+        while (temp->next != head) {
+            temp = temp->next;
+        }
+        temp->next = head->next;
+        free(head);
+        return temp->next;
+    }
+
+    // Search for the node to be deleted
+    do {
+        prev = temp;
+        temp = temp->next;
+    } while (temp != head && temp->score != targetScore);
+
+    if (temp == head) {
+        printf("Score not found\n");
+        return head;
+    }
+
+    prev->next = temp->next;
+    free(temp);
+    return head;
+}
+
+int main() {
+    int N, targetScore;
+    scanf("%d", &N);
+    struct Node* head = NULL;
+
+    for (int i = 0; i < N; i++) {
+        int score;
+        scanf("%d", &score);
+        head = insertEnd(head, score);
+    }
+    scanf("%d", &targetScore);
+    
+    displayList(head);
+    head = deleteNode(head, targetScore);
+    displayList(head);
+    return 0;
+}
+
