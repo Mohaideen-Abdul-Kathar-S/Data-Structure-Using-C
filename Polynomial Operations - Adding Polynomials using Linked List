@@ -1,0 +1,116 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+		while(current->next!=NULL && current->next->exp > temp->exp){
+			current=current->next;
+		}
+		if(current->exp==temp->exp){
+			current->coeff+=temp->coeff;
+			free(temp);
+			if(current->coeff == 0){
+				poly toDelete = current;
+				current = current->next;
+				free(toDelete);
+				head= current;
+			}
+		}
+		else{
+			temp->next = current->next;
+			current->next=temp;
+		}
+	}
+	return head;
+}
+poly add(poly head1,poly head2){
+	poly head3=NULL;
+	int i;
+	poly t1,t2,t3,current;
+	t1=head1;
+	t2=head2;
+	t3=head3;
+	while(t1 && t2){
+		poly p3 = (poly)malloc(sizeof(struct polynomial));
+		p3->next=NULL;
+		if(head3==NULL){
+			head3=p3;
+			current=p3;
+		}
+		else{
+			current->next=p3;
+			current=p3;
+		}
+		if(t1->exp == t2->exp){
+			p3->coeff = t1->coeff+t2->coeff;
+			p3->exp=t1->exp;
+			t1=t1->next;
+			t2=t2->next;
+		}
+		else if((t1->exp)>(t2->exp)){
+			p3->coeff= t1->coeff;
+			p3->exp=t1->exp;
+			t1=t1->next;
+		}
+		else if((t1->exp)<(t2->exp)){
+			p3->coeff= t2->coeff;
+			p3->exp= t2->exp;
+			t2=t2->next;
+		}
+	}
+    	while(t1 || t2){
+		poly p3 = (poly)malloc(sizeof(struct polynomial));
+		p3->next=NULL;
+		current->next=p3;
+		current=p3;
+		if(t1!=NULL){
+			p3->coeff=t1->coeff;
+			p3->exp=t1->exp;
+			t1=t1->next;
+		}
+		else if(t2!=NULL){
+			p3->coeff=t2->coeff;
+			p3->exp= t2->exp;
+			t2=t2->next;
+		}
+	}
+	return head3;
+}
+
+
+
+
+poly create(poly head) {
+	poly temp;
+	char ch;
+	int coeff, exp;
+	do {
+		temp = (poly)malloc(sizeof(struct polynomial));
+		printf("Coeff and Power of the term: ");
+		scanf("%d%d", &coeff, &exp);
+		temp -> coeff = coeff;
+		temp -> exp = exp;
+		temp -> next = NULL;
+		head = addTerm(head, temp);
+		printf("Want to add more terms?(y/n): ");
+		scanf(" %c", &ch);
+	} while(ch != 'n');
+	return head;
+}
+
+void main() {
+	poly head1=NULL, head2= NULL, result = NULL;
+	int ch;
+	printf("First polynomial: \n");
+	head1 = create(head1);
+	printf("Second polynomial: \n");
+	head2 = create(head2);
+	result = add(head1, head2);
+	printf("First polynomial: ");
+	print(head1);
+	printf("Second polynomial: ");
+	print(head2);
+	printf("Addition: ");
+	print(result);
+}
