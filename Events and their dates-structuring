@@ -1,0 +1,86 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+
+struct Node{
+char name[20],date[15];
+struct Node *next;
+struct Node *prev;
+};
+
+typedef struct Node* node;
+node head=NULL;
+
+node create(char name[],char date[]){
+node temp=(node)malloc(sizeof(struct Node));
+strcpy(temp->name,name);
+strcpy(temp->date,date);
+temp->next=NULL;
+temp->prev=NULL;
+return temp;
+}
+
+void insert(char name[],char date[]){
+node list=create(name,date);
+if(head==NULL){
+head=list;
+}else{
+node temp=head;
+while(temp->next!=NULL){
+temp=temp->next;
+}
+temp->next=list;
+list->prev=temp;
+}
+}
+
+void display(){
+if(head==NULL){
+printf("List is empty\n");
+}else{
+node temp=head;
+while(temp!=NULL){
+printf("%s - %s\n",temp->name,temp->date);
+temp=temp->next;
+}
+}
+}
+
+void del(){
+node temp1=head;
+head=head->next;
+head->prev=NULL;
+free(temp1);
+if(head->next==NULL){
+free(head);
+head=NULL;
+return;}
+
+node temp=head;
+while(temp->next!=NULL){
+temp=temp->next;
+}
+
+
+temp=temp->prev;
+free(temp->next);
+temp->next=NULL;
+
+}
+
+void main(){
+int n;
+scanf("%d",&n);
+char a[20],b[15];
+for(int i=0;i<n;i++){
+scanf("%s",a);
+scanf("%s",b);
+insert(a,b);
+}
+display();
+del();
+printf("After Deletion:\n");
+display();
+}
