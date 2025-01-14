@@ -1,0 +1,74 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{   int data;
+    struct Node *next;
+};
+
+struct Node* create(int n){
+struct Node* temp=(struct Node*)malloc(sizeof(struct Node));
+temp->data=n;
+temp->next=NULL;
+return temp;
+}
+// Complete the below function to append a new node with given data to the end of the linked list
+void append(struct Node** head_ref, int new_data) {   
+    struct Node* node=create(new_data);
+if(*head_ref==NULL){
+*head_ref=node;
+}else{
+struct Node* temp=*head_ref;
+while(temp->next!=NULL){
+temp=temp->next;
+}
+temp->next=node;
+}
+    
+}
+
+// Complete the below function to reverse the linked list
+static void reverse(struct Node** head_ref) {   
+    
+    struct Node* next=NULL;
+struct Node* cur=*head_ref;
+struct Node* prev=NULL;
+while(cur!=NULL){
+next=cur->next;
+cur->next=prev;
+prev=cur;
+cur=next;
+}
+*head_ref=prev;
+}
+
+// Complete the below function to traverse the linked list and print each node's data
+void printList(struct Node *node) {   
+    
+    struct Node* temp=node;
+while(temp!=NULL){
+printf("%d -> ",temp->data);
+temp=temp->next;
+}
+
+}
+
+int main() {   
+	struct Node* head = NULL;
+    int n,i,b[30],j,a;
+    scanf("%d",&n);
+    for(i=0,j=n-1;i<n;i++,j--)
+    {   scanf("%d",&a);
+        b[j]=a;
+        append(&head, a);
+    }
+    printf("Linked list: ");
+    printList(head);
+    reverse(&head);
+    printf("\nReversed Linked list: ");
+    printList(head);
+    return 0;
+}
+
