@@ -1,0 +1,57 @@
+
+
+
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main() {
+    char arr[50];
+    int stk[50], top = -1;
+
+    printf("Postfix expression: ");
+    scanf("%s", arr);
+    int n = strlen(arr);
+
+    // Checking if the last character is a digit
+    if (isdigit(arr[n-1])) {
+        printf("Invalid postfix expression\n");
+        return 1;
+    }
+
+    for (int i = 0; arr[i] != '\0'; i++) {
+        if (isdigit(arr[i])) {
+            // Convert char to int and push to stack
+            stk[++top] = arr[i] - '0';
+        } else if ((arr[i] == '+' || arr[i] == '-' || arr[i] == '*' || arr[i] == '/' || arr[i] == '%') && top >= 1) {
+            int temp1 = stk[top--];
+            int temp2 = stk[top];
+
+            // Perform operation based on the operator
+            if (arr[i] == '+') {
+                stk[top] = temp2 + temp1;
+            } else if (arr[i] == '-') {
+                stk[top] = temp2 - temp1;
+            } else if (arr[i] == '*') {
+                stk[top] = temp2 * temp1;
+            } else if (arr[i] == '/') {
+                if (temp1 == 0) {
+                    printf("Division by zero error\n");
+                    return 1;
+                }
+                stk[top] = temp2 / temp1;
+            } else if (arr[i] == '%') {
+                stk[top] = temp2 % temp1;
+            }
+        } else {
+            printf("Stack underflow\n");
+            return 1;
+        }
+    }
+
+    // The result should be at the top of the stack
+    printf("Evaluated expression: %d\n", stk[top]);
+
+    return 0;
+}
+
