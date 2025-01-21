@@ -1,0 +1,68 @@
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#define MAX_SIZE 100
+#include "stack.h"
+// Function to simulate undo operation
+void undo(struct Stack* undoStack, struct Stack* redoStack, char* text) {
+    if(strlen(text)==0){
+printf("Undo not possible\n");
+return;
+}
+if(!isFull(undoStack)){
+push(undoStack,text[strlen(text)-1]);
+text[strlen(text)-1]='\0';
+}
+printf("Current Text: ");
+for(int i=0;i<strlen(text);i++){
+printf("%c",text[i]);
+}
+printf("\n");
+
+
+    
+}
+// Function to simulate redo operation
+void redo(struct Stack* undoStack, struct Stack* redoStack, char* text) {
+   if(isEmpty(undoStack)){
+printf("Redo not possible\n");
+return;
+}
+text[strlen(text)]=pop(undoStack);
+printf("Current Text: ");
+for(int i=0;i<strlen(text);i++){
+printf("%c",text[i]);
+}
+printf("\n");
+
+
+   
+}
+// Function to add a character to the text
+void addCharacter(struct Stack* undoStack, char* text, char character) {
+
+for(int i=0;i<strlen(text)+1;i++){
+if(text[i]=='\0'){
+text[i]=character;
+printf("%c\n",character);
+break;
+}
+printf("%c",text[i]);
+}
+
+
+
+
+}
+int main() {
+    struct Stack undoStack, redoStack;
+    initialize(&undoStack);
+    initialize(&redoStack);
+    char text[MAX_SIZE];
+    text[0] = '\0';  // Initialize an empty text
+    char userInput;
+    do {
+    	printf("Enter a character (or 'u' for undo, 'r' for redo, 'q' to quit): ");
+}
