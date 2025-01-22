@@ -1,0 +1,98 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_MOVIES 5
+#define MAX_NAME_LENGTH 50
+// Structure for a movie rating
+struct MovieRating {
+    char name[MAX_NAME_LENGTH];
+    int rating;
+};
+// Structure for the movie recommendation stack
+struct MovieStack {
+    struct MovieRating ratings[MAX_MOVIES];
+    int top;
+};
+// Function to initialize the movie stack
+void initializeStack(struct MovieStack* stack) {
+    stack->top = -1;
+}
+// Function to check if the stack is empty
+int isEmpty(struct MovieStack* stack) {
+    return stack->top == -1;
+}
+// Function to check if the stack is full
+int isFull(struct MovieStack* stack) {
+    return stack->top == MAX_MOVIES - 1;
+}
+// Function to push a movie rating onto the stack
+void push(struct MovieStack* stack, char name[], int rating) {
+	if(isFull(stack)){
+		printf("Stack is full\n");
+		return;
+	}
+	stack->top++;
+	
+	strcpy(stack->ratings[stack->top].name,name);
+	stack->ratings[stack->top].rating=rating;
+	printf("Rating added: %s - %d\n",stack->ratings[stack->top].name,stack->ratings[stack->top].rating);
+}
+// Function to pop the last movie rating from the stack
+void pop(struct MovieStack* stack) {
+	if(isEmpty(stack)){
+		printf("Stack is empty\n");
+		return;
+	}
+	printf("Undoing last rating: %s - %d\n",stack->ratings[stack->top].name,stack->ratings[stack->top--].rating);
+	
+}
+// Function to display the current stack of movie ratings
+void displayStack(struct MovieStack* stack) {
+	if(isEmpty(stack)){
+		printf("Stack is empty\n");
+		return;
+	}
+	printf("Current Movie Ratings:\n");
+	for(int i=0;i<=stack->top;i++){
+		printf("%s - %d\n",stack->ratings[i].name,stack->ratings[i].rating);
+	}
+	
+	
+}
+int main() {
+    struct MovieStack movieStack;
+    initializeStack(&movieStack);
+    int choice;
+    char name[MAX_NAME_LENGTH];
+    int rating;
+    do {
+        printf("1. Rate\n");
+        printf("2. Undo\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Movie name: ");
+                scanf(" %[^\n]s", name);
+                printf("Rating: ");
+                scanf("%d", &rating);
+                push(&movieStack, name, rating);
+                break;
+            case 2:
+                pop(&movieStack);
+                break;
+            case 3:
+                displayStack(&movieStack);
+                break;
+            case 4:
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    } while (choice != 4);
+    return 0;
+}
+
