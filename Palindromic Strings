@@ -1,0 +1,40 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include<ctype.h>
+#include <string.h>
+#define MAX_LENGTH 100
+#include "stack.h"
+// Function to check if a given word is a palindrome
+int isPalindrome(char* word) {
+ 
+struct Stack* stk = createStack(strlen(word));
+for(int i=0;i<strlen(word);i++){
+push(stk,word[i]);
+}
+
+for(int i=0;i<strlen(word);i++){
+if(word[i]!=pop(stk)) return 0;
+}
+return 1;
+
+
+    
+}
+int main() {
+    char word[MAX_LENGTH];
+
+    // Get input from the user
+    scanf("%s", word);
+
+    // Check if the entered word is a palindrome
+    if (isPalindrome(word)) {
+        printf("palindrome\n");
+    } else {
+        printf("not palindrome\n");
+    }
+
+    return 0;
+}
+
