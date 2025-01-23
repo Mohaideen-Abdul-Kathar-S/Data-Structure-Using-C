@@ -1,0 +1,73 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+// Structure to represent a binary tree node
+struct TreeNode {
+    int data;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+// Function to create a new tree node with the given data
+struct TreeNode* createTreeNode(int data) {
+    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+// Function to construct a binary tree from an array representation
+struct TreeNode* constructBinaryTree(int arr[], int n, int index) {
+    if (index >= n || arr[index] == -1) {
+        return NULL;
+    }
+    struct TreeNode* root = createTreeNode(arr[index]);
+    root->left = constructBinaryTree(arr, n, 2 * index + 1);
+    root->right = constructBinaryTree(arr, n, 2 * index + 2);
+    return root;
+}
+
+// Complete the below utility function to check if a binary tree is a valid binary search tree
+bool isValidBSTUtil(struct TreeNode* root, int* prev) {
+     if (root == NULL) {
+        return true;
+    }
+
+    
+    if (!isValidBSTUtil(root->left, prev)) {
+        return false;
+    }
+
+    
+    if (root->data <= *prev) {
+        return false;
+    }
+
+    
+    *prev = root->data;
+
+    
+    return isValidBSTUtil(root->right, prev);
+    
+}
+// Complete the below function to check if a binary tree is a valid binary search tree
+bool isValidBST(struct TreeNode* root) {
+	int prev = 0; 
+    return isValidBSTUtil(root, &prev);
+
+
+}
+int main() {
+    int n;
+    scanf("%d", &n);
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    struct TreeNode* root = constructBinaryTree(arr, n, 0);
+    bool isBST = isValidBST(root);
+    printf("%d %s\n", root->data, isBST ? "YES" : "NO");
+    return 0;
+}
+
