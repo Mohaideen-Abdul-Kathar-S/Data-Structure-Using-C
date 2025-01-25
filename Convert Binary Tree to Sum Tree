@@ -1,0 +1,105 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Definition of a Tree Node
+typedef struct Tree {
+    int data;
+    struct Tree* left;
+    struct Tree* right;
+} tree;
+
+// Create a new node with the given value
+tree* createNode(int data) {
+    tree* newNode = (tree*)malloc(sizeof(tree));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to build the tree using level order input
+tree* buildTree() {
+    char input[10];
+    scanf("%s", input);
+    
+    if (strcmp(input, "none") == 0) {
+        return NULL; // No node present
+    }
+
+    int data = atoi(input);
+    tree* root = createNode(data);
+
+    // Queue to manage level order tree construction
+    tree* queue[100];
+    int front = 0, rear = 0;
+    
+    queue[rear++] = root;  // Start with the root node
+
+    while (front < rear) {
+        tree* current = queue[front++];  // Dequeue the current node
+        
+        // Read left child
+        scanf("%s", input);
+        if (strcmp(input, "none") != 0) {
+            current->left = createNode(atoi(input));
+            queue[rear++] = current->left;  // Enqueue the left child
+        }
+
+        // Read right child
+        scanf("%s", input);
+        if (strcmp(input, "none") != 0) {
+            current->right = createNode(atoi(input));
+            queue[rear++] = current->right;  // Enqueue the right child
+        }
+    }
+
+    return root;
+}
+
+// Function to perform in-order traversal
+void inorder(tree* root) {
+    if (root == NULL) return;
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
+}
+
+// Function to convert the binary tree into a sum tree
+int toSumTree(tree* root) {
+    if (root == NULL) {
+        return 0;
+    }
+
+    // Recursively convert left and right subtrees
+    int leftSum = toSumTree(root->left);
+    int rightSum = toSumTree(root->right);
+
+    // Store the current node's value
+    int oldValue = root->data;
+
+    // Set the current node's value to the sum of the values of its left and right subtrees
+    root->data = leftSum + rightSum;
+
+    // Return the sum of the node's original value and its left and right subtrees' sum
+    return oldValue + root->data;
+}
+
+int main() {
+  
+    tree* root = buildTree();
+
+    
+    inorder(root);
+    printf("\n");
+
+    toSumTree(root);
+
+    
+    inorder(root);
+    printf("\n");
+
+    return 0;
+}
+
