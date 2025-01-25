@@ -1,0 +1,79 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+// Helper function to create a new tree node.
+struct TreeNode* newNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+// Recursive function to construct the binary tree from the string.
+struct TreeNode* constructTree(char* s, int* index) {
+    if (s[*index] == '\0') return NULL;
+
+    // Read the number (root value)
+    int num = 0;
+    while (isdigit(s[*index])) {
+        num = num * 10 + (s[*index] - '0');
+        (*index)++;
+    }
+
+    // Create the current root node
+    struct TreeNode* root = newNode(num);
+
+    // If the next character is '(', parse the left subtree
+    if (s[*index] == '(') {
+        (*index)++; // Skip '('
+        root->left = constructTree(s, index);
+        (*index)++; // Skip ')'
+    }
+
+    // If the next character is '(', parse the right subtree
+    if (s[*index] == '(') {
+        (*index)++; // Skip '('
+        root->right = constructTree(s, index);
+        (*index)++; // Skip ')'
+    }
+
+    return root;
+}
+
+// Function to perform pre-order traversal and print the values.
+void preOrder(struct TreeNode* root) {
+    if (root == NULL) return;
+
+    // Print the root node value
+    printf("%d ", root->val);
+    // Recurse on the left subtree
+    preOrder(root->left);
+    // Recurse on the right subtree
+    preOrder(root->right);
+}
+
+int main() {
+    char str[100];
+    
+    scanf("%s", str);
+
+    int index = 0;
+    struct TreeNode* root = constructTree(str, &index);
+
+    
+    preOrder(root);
+
+    return 0;
+}
+
