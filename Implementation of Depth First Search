@@ -1,0 +1,39 @@
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+int vertex;
+struct node* next;
+};
+typedef struct node* GNODE;
+GNODE graph[100];
+int visited[100];
+
+void DFS(int v){
+if(visited[v]!=1){
+visited[v]=1;
+printf("\n%d",v);
+GNODE temp = graph[v];
+while(temp!=NULL){
+DFS(temp->vertex);
+temp=temp->next;
+}
+}
+}
+
+void main() {
+    int n,E,i,s,d,v;
+    GNODE q,p;
+    printf("Enter no of vertices: ");
+	scanf("%d",&n);
+	printf("Enter no of edges: ");
+	scanf("%d",&E);
+	for(i=1;i<=E;i++) {
+		printf("Enter source: ");
+		scanf("%d",&s);
+		printf("Enter destination: ");
+		scanf("%d",&d);
+		q=(GNODE)malloc(sizeof(struct node));
+}
