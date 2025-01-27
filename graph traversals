@@ -1,0 +1,39 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 99
+
+struct node{
+int vertex;
+struct node* next;
+};
+typedef struct node* GNODE;
+
+GNODE graph[MAX];
+GNODE temp=NULL;
+
+int visited[MAX],Q[MAX],front=0,rear=0;
+void bfs(int Q[]){
+printf("\n");
+
+for(int i=0;i<rear;i++){
+printf("%d\n",Q[i]);
+}
+}
+void BFS(int v){
+Q[rear++]=v;
+visited[v]=1;
+while(front<rear){
+temp=graph[Q[front++]];
+while(temp!=NULL){
+if(visited[temp->vertex]==0){
+Q[rear++]=temp->vertex;
+visited[temp->vertex]=1;
+}
+temp=temp->next;
+}
+}
+bfs(Q);
+}
+}
