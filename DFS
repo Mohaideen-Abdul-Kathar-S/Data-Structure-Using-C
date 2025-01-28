@@ -1,0 +1,39 @@
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+int vertex;
+struct node* next;
+};
+typedef struct node* GNODE;
+GNODE graph[100];
+int visited[100];
+
+void DFS(int g){
+if(visited[g]==0){
+printf("\n%d",g);
+visited[g]=1;
+GNODE t = graph[g];
+while(t!=NULL){
+DFS(t->vertex);
+t=t->next;
+}
+}
+}
+    
+
+void main() {
+    int n,E,i,s,d,v;
+    GNODE q,p;
+    printf("Enter the number of vertices: ");
+	scanf("%d",&n);
+	printf("Enter the number of edges: ");
+	scanf("%d",&E);
+	for(i=1;i<=E;i++) {
+		printf("Enter source: ");
+		scanf("%d",&s);
+		printf("Enter destination: ");
+		scanf("%d",&d);
+
