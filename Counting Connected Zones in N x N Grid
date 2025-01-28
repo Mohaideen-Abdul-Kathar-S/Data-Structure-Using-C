@@ -1,0 +1,39 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void find(int** car, int n, int i, int j) {
+    if(i >= 0 && i < n && j >= 0 && j < n && car[i][j] == 1) {
+        car[i][j] = 0;
+        find(car, n, i, j - 1);
+        find(car, n, i - 1, j);
+        find(car, n, i, j + 1);
+        find(car, n, i + 1, j);
+    }
+}
+
+int main() {
+    int n, m = 0;
+    scanf("%d", &n);
+
+    int** car = (int**)malloc(n * sizeof(int*));
+    for(int i = 0; i < n; i++) {
+        car[i] = (int*)malloc(n * sizeof(int));
+        for(int j = 0; j < n; j++) {
+            scanf("%d", &car[i][j]);
+        }
+    }
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(car[i][j] == 1) {
+                find(car, n, i, j);
+                m++;
+            }
+        }
+    }
+
+    printf("%d\n", m);
+
+
