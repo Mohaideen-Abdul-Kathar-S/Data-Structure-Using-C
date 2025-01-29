@@ -1,0 +1,208 @@
+
+
+
+
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdio.h>
+
+struct node {
+    int data;
+    struct node *left, *right;
+    int ht;  // Height of the node
+};
+typedef struct node* AVLNODE;
+
+// Create a new node in AVL
+AVLNODE createNodeInAVL(int item) {
+    AVLNODE temp = (AVLNODE)malloc(sizeof(struct node));
+    if (temp == NULL) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    temp->data = item;
+    temp->left = temp->right = NULL;
+    temp->ht = 0;  // New node height is 0
+    return temp;
+}
+
+// Get the height of the node
+int height(AVLNODE root) {
+    if (root == NULL) return -1;
+    int l = (root->left != NULL) ? root->left->ht : -1;
+    int r = (root->right != NULL) ? root->right->ht : -1;
+    return 1 + (l > r ? l : r);
+}
+
+// Left-Left (LL) Rotation
+AVLNODE LL(AVLNODE root) {
+    AVLNODE mid = root->left;
+    AVLNODE midright = mid->right;
+
+    mid->right = root;
+    root->left = midright;
+
+    // Update heights
+    root->ht = height(root);
+    mid->ht = height(mid);
+
+    return mid;
+}
+
+// Right-Right (RR) Rotation
+AVLNODE RR(AVLNODE root) {
+    AVLNODE mid = root->right;
+    AVLNODE midleft = mid->left;
+
+    mid->left = root;
+    root->right = midleft;
+
+    // Update heights
+    root->ht = height(root);
+    mid->ht = height(mid);
+
+    return mid;
+}
+
+// Left-Right (LR) Rotation
+AVLNODE LR(AVLNODE root) {
+    root->left = RR(root->left);  // First, perform RR on the left child
+    return LL(root);              // Then perform LL on the root
+}
+
+// Right-Left (RL) Rotation
+AVLNODE RL(AVLNODE root) {
+    root->right = LL(root->right);  // First, perform LL on the right child
+    return RR(root);                // Then perform RR on the root
+}
+
+// Get the balance factor of a node
+int balancefactor(AVLNODE root) {
+    if (root == NULL) return -1;  // No balance factor for NULL node
+    int a = (root->left != NULL) ? root->left->ht : -1;
+    int b = (root->right != NULL) ? root->right->ht : -1;
+    return a - b;  // Balance factor is left height - right height
+}
+
+// In-order traversal of AVL Tree
+void inorderInAVL(AVLNODE root) {
+    if (root != NULL) {
+        inorderInAVL(root->left);
+        printf("%d(%d) ", root->data, balancefactor(root));
+        inorderInAVL(root->right);
+    }
+}
+
+// Insert a node into AVL Tree
+AVLNODE insertNodeInAVL(AVLNODE root, int x) {
+    if (root == NULL) {
+        root = createNodeInAVL(x);
+        printf("Successfully inserted.\n");
+    } else if (x > root->data) {
+        root->right = insertNodeInAVL(root->right, x);
+        if (balancefactor(root) == -2) {
+            if (x > root->right->data) {
+                root = RR(root);  // Corrected to RR
+            } else {
+                root = RL(root);
+            }
+        }
+    } else if (x < root->data) {
+        root->left = insertNodeInAVL(root->left, x);
+        if (balancefactor(root) == 2) {
+            if (x < root->left->data) {
+                root = LL(root);  // Corrected to LL
+            } else {
+                root = LR(root);
+            }
+        }
+    } else {
+        printf("Element %d already exists.\n", x);
+    }
+    root->ht = height(root);  // Update height after insertion
+    return root;
+}
+
+// Find the minimum node in the tree
+int mintree(AVLNODE root) {
+    if (root->left == NULL) {
+        return root->data;
+    } else {
+        return mintree(root->left);  // Return the minimum node in the left subtree
+    }
+}
+
+// Delete a node from the AVL Tree
+AVLNODE deleteNodeInAVL(AVLNODE root, int x) {
+    if (root == NULL) {
+        printf("Cannot find %d in the AVL Tree.\n",x);
+        return NULL;
+    }
+    
+    if (x < root->data) {
+        root->left = deleteNodeInAVL(root->left, x);
+    } else if (x > root->data) {
+        root->right = deleteNodeInAVL(root->right, x);
+    } else {  // Found the node to be deleted
+        if (root->left == NULL || root->right == NULL) {  // One child or no child
+            AVLNODE temp = (root->left != NULL) ? root->left : root->right;
+            free(root);
+            return temp;
+        } else {  // Two children
+            root->data = mintree(root->right);  // Find the minimum in the right subtree
+            root->right = deleteNodeInAVL(root->right, root->data);  // Delete the successor
+        }
+        printf("Deleted %d from AVL Tree.\n", x);
+    }
+    
+    if (root == NULL) return NULL;
+
+    root->ht = height(root);  // Update height after deletion
+
+    // Rebalance the tree if necessary
+    int bf = balancefactor(root);
+    if (bf == 2) {
+        if (balancefactor(root->left) >= 0) {
+            return LL(root);  // LL case
+        } else {
+            return LR(root);  // LR case
+        }
+    } else if (bf == -2) {
+        if (balancefactor(root->right) <= 0) {
+            return RR(root);  // RR case
+        } else {
+            return RL(root);  // RL case
+        }
+    }
+
+    return root;
+}
+
+
+
+
+
+int main() {
+  int i, limit, x;
+  AVLNODE root = NULL;
+  printf("Enter the limit to form AVL tree: ");
+  scanf("%d", &limit);
+
+  for (i = 1; i <= limit; ++i) {
+    printf("Enter node: ");
+    scanf("%d", &x);
+    root = insertNodeInAVL(root, x);
+  }
+  printf("Enter an element to be deleted: ");
+  scanf("%d", &x);
+  root = deleteNodeInAVL(root,x);
+  if (root == NULL) {
+    printf("AVL Tree is empty.\n");
+  } else {
+    printf("Elements of the AVL tree (in-order traversal): ");
+    inorderInAVL(root);
+    printf("\n");
+  }
+}
