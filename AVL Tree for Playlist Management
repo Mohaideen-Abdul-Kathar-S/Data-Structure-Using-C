@@ -1,0 +1,139 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node* left;
+    struct node* right;
+    int ht;
+};
+
+typedef struct node *AVLNODE;
+
+AVLNODE createNodeInAVL(int item) {
+    AVLNODE temp = (AVLNODE)malloc(sizeof(struct node));
+    temp->data = item;
+    temp->left = temp->right = NULL;
+    temp->ht = 1;
+    return temp;
+}
+
+int height(AVLNODE root) {
+    if (root == NULL)
+        return 0;
+    return root->ht;
+}
+
+AVLNODE rotateRight(AVLNODE x) {
+    AVLNODE y = x->left;
+    x->left = y->right;
+    y->right = x;
+    x->ht = 1 + ((height(x->left) > height(x->right)) ? height(x->left) : height(x->right));
+    y->ht = 1 + ((height(y->left) > height(y->right)) ? height(y->left) : height(y->right));
+    return y;
+}
+
+AVLNODE rotateLeft(AVLNODE x) {
+    AVLNODE y = x->right;
+    x->right = y->left;
+    y->left = x;
+    x->ht = 1 + ((height(x->left) > height(x->right)) ? height(x->left) : height(x->right));
+    y->ht = 1 + ((height(y->left) > height(y->right)) ? height(y->left) : height(y->right));
+    return y;
+}
+
+AVLNODE LL(AVLNODE root) {
+    return rotateLeft(root);
+}
+
+AVLNODE RR(AVLNODE root) {
+    return rotateRight(root);
+}
+
+AVLNODE LR(AVLNODE root) {
+    root->left = rotateLeft(root->left);
+    return rotateRight(root);
+}
+
+AVLNODE RL(AVLNODE root) {
+    root->right = rotateRight(root->right);
+    return rotateLeft(root);
+}
+
+int balancefactor(AVLNODE root) {
+    if (root == NULL)
+        return 0;
+    return height(root->left) - height(root->right);
+}
+void postorderInAVL(AVLNODE root) {
+	if (root != NULL) {
+		postorderInAVL(root->left);
+		postorderInAVL(root->right);
+		printf("%d(%d) ", root->data,balancefactor(root));
+	}
+}
+AVLNODE insertNodeInAVL(AVLNODE root, int x) {
+if(root==NULL){
+AVLNODE node = createNodeInAVL(x);
+return node;
+}else if(root->data>x){
+root->left=insertNodeInAVL(root->left,x);
+}else if(root->data<x){
+root->right=insertNodeInAVL(root->right,x);
+}else{
+printf("Song with %d already exists.\n",x);
+return root;
+}
+root->ht= 1+((height(root->left)<height(root->right))?height(root->right):height(root->left));
+int bf = balancefactor(root);
+if(bf==2){
+if(root->left->data>x){
+root=RR(root);
+}else{
+root=LR(root);
+}
+}else if(bf==-2){
+if(root->right->data<x){
+root=LL(root);
+}else{
+root=RL(root);
+}
+}
+return root;
+}
+
+AVLNODE searchNodeInAVL(AVLNODE root, int ele) {
+if(root==NULL){
+return root;
+}
+else if(root->data>ele){
+return searchNodeInAVL(root->left,ele);
+}else if(root->data<ele){
+return searchNodeInAVL(root->right,ele);
+}
+return root;
+}
+
+int main() {
+    AVLNODE root = NULL;
+    int q, key;
+    char ch;
+    scanf("%d", &q);
+    while (q--) {
+        scanf(" %c %d", &ch, &key);
+        if (ch == 'i')
+            root = insertNodeInAVL(root, key);
+        else if (ch == 's') {
+    			AVLNODE searchResult = searchNodeInAVL(root, key);
+    				if (searchResult != NULL)
+        				printf("Found %d\n", key);
+    				else
+        				printf("Not found %d\n", key);
+		}
+
+    }
+    postorderInAVL(root);
+    printf("\n");
+    return 0;
+}
