@@ -1,0 +1,92 @@
+
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node* next;
+};
+struct Hashing {
+    int hash_bucket;
+    struct Node** hashtable;
+};
+
+
+
+// Function to create a hash table with a given number of buckets
+struct Hashing* createHashing(int size) {
+    struct Hashing* hashTable = (struct Hashing*)malloc(sizeof(struct Hashing));
+    hashTable->hash_bucket = size;
+    hashTable->hashtable = (struct Node**)malloc(sizeof(struct Node*) * size);
+    
+    // Initialize each bucket to NULL
+    for (int i = 0; i < size; i++) {
+        hashTable->hashtable[i] = NULL;
+    }
+
+    return hashTable;
+}
+
+// Hash function to map values to keys
+int hashFunction(int key, int size) {
+    return key % size;
+}
+
+// Function to insert a key into the hash table
+void insertKey(struct Hashing* hashTable, int key) {
+    // Calculate hash value
+    int hashIndex = hashFunction(key, hashTable->hash_bucket);
+
+    // Create a new node
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = key;
+    newNode->next = NULL;
+
+    // If there is no collision, simply insert the new node
+    if (hashTable->hashtable[hashIndex] == NULL) {
+        hashTable->hashtable[hashIndex] = newNode;
+    } else {
+        // If collision occurs, insert at the beginning of the linked list
+        newNode->next = hashTable->hashtable[hashIndex];
+        hashTable->hashtable[hashIndex] = newNode;
+    }
+}
+void dis(struct Node* temp){
+if(temp != NULL) {
+dis(temp->next);
+            printf(" --> %d", temp->data);
+            
+}
+}
+// Function to display the hash table
+void displayHash(struct Hashing* hashTable) {
+    for (int i = 0; i < hashTable->hash_bucket; i++) {
+        printf("%d", i);
+        struct Node* temp = hashTable->hashtable[i];
+        
+        // Print the linked list at this index
+        dis(temp);
+        printf("\n");
+    }
+}
+int main() {
+    int hash_array[7];
+    // printf("Enter 7 integers for the hash table:\n");
+    for (int i = 0; i < 7; i++) {
+        scanf("%d", &hash_array[i]);
+    }
+    int n = sizeof(hash_array) / sizeof(hash_array[0]);
+
+    struct Hashing* hashTable = createHashing(7); // Number of buckets = 7
+
+    // insert the keys into the hash table
+    for (int i = 0; i < n; i++) {
+        insertKey(hashTable, hash_array[i]);
+    }
+    // display the Hash table
+    printf("Hash table created:\n");
+    displayHash(hashTable);
+
+    return 0;
+}
+
