@@ -1,0 +1,31 @@
+
+
+#include <stdio.h>
+int hashDigitExtraction(int key) {
+    // complete this function to perform hash using digit extraction
+    
+    int sum = 0;
+    
+    // Extract digits and sum them
+    while (key > 0) {
+        sum += key % 10;  // Add the last digit to the sum
+        key /= 10;         // Remove the last digit
+    }
+    
+    return sum;
+
+}
+int main() {
+	// complete this main Function
+	int key;
+    
+    // Read the input key (positive integer)
+    scanf("%d", &key);
+    
+    // Call the hashDigitExtraction function and print the resulting hash value
+    printf("%d\n", hashDigitExtraction(key));
+    
+    return 0;
+	
+}
+
